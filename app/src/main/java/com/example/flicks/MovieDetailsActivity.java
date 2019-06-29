@@ -6,16 +6,11 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -26,31 +21,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-
-import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    Movie movie;  // movie to display
+    Movie movie;              // movie to display
+    AsyncHttpClient client;   // AsyncHttpClient() to call API
+
     // Constants:
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     public final static String API_KEY_PARAM = "api_key";  // the parameter name for the API key
     public final static String TAG = "MovieListActivity";  // tag for logging from this activity
 
-    AsyncHttpClient client;   // AsyncHttpClient() to call API
+
 
     // The view objects
-    TextView tvTitle;  // Title
-    TextView tvOverview;  // Description
-    ImageView movieImage;
+    TextView tvTitle;         // Title
+    TextView tvOverview;      // Description
+    ImageView movieImage;     // Move image poster
     RatingBar rbVoteAverage;  // Average vote
-    Integer movieId;  // movie id for trailer
-    String key;
-    Context context;  // context for rendering
+    Integer movieId;          // movie id for trailer
+    String key;               // key for trailer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,36 +72,34 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         // get movie id
         movieId = movie.getId();
-        //set a boolean to check if func run i.e. returns trailer.
-        getMovieTrailer();
 
         movieImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // create intent for the new activity
-                Intent intent = new Intent(MovieDetailsActivity.this, MovieTrailerActivity.class);
-                intent.putExtra("video_key", key);
-                startActivity(intent);
+                getMovieTrailer();
             }
         });
 
     }
 
     private void getMovieTrailer(){
-        String url = API_BASE_URL + "/movie/"+movieId+"/video";  // create URL
+        String url = API_BASE_URL + "/movie/"+movieId+"/videos";  // create URL
         // Set request params to be passed
         RequestParams params = new RequestParams();
         params.put(API_KEY_PARAM, getString(R.string.api_key));  // API key, always required
         client.get(url, params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-              //  boolean ret = false;
                 // load the result of movie
                 try {
                     // parse results and get the key
                     JSONArray results = response.getJSONArray("results");
                     JSONObject obj = results.getJSONObject(0);
                     key = obj.getString("key");
+                    Intent intent = new Intent(MovieDetailsActivity.this, MovieTrailerActivity.class);
+                    intent.putExtra("video_key", key);
+                    startActivity(intent);
                 } catch (JSONException e) {
                     logError("Failed to parse movie trailer", e, true);
                 }

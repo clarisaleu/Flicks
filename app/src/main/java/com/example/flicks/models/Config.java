@@ -20,8 +20,6 @@ public class Config {
         // Get the backdrop size
         JSONArray backdropSizeOptions = images.getJSONArray("backdrop_sizes");
         backdropSize = backdropSizeOptions.optString(1, "w780");  // use "w780" as default
-
-
     }
 
     // Helper method for creating urls

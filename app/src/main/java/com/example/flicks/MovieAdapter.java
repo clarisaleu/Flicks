@@ -30,8 +30,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     // Instance fields:
     ArrayList<Movie> movies;  // list of movies
-    Config config;  // config needed for movie image urls
-    Context context;  // context for rendering
+    Config config;            // config needed for movie image urls
+    Context context;          // context for rendering
 
     public MovieAdapter(ArrayList<Movie> movies) {
         this.movies = movies;  // initialize movie list
@@ -66,15 +66,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     // Binds an inflated view to a new view
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Movie movie = movies.get(position);  // get the movie data at the specified position
+        Movie movie = movies.get(position);        // get the movie data at the specified position
         holder.tvTitle.setText(movie.getTitle());  // populate the view with the movie data
         holder.tvOverview.setText(movie.getOverview());
 
         // Determine the current orientation
         boolean isPortrait =  context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
-        // Build url for poster image
-        String imageUrl = null;
+
+        String imageUrl = null;  // Build url for poster image
 
         // If in portrait mode, laod the poster image else orientation in landscape mode
         if(isPortrait){
@@ -91,13 +91,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         Glide.with(context).load(imageUrl).bitmapTransform(new RoundedCornersTransformation(context, radius, margin)).placeholder(placeHolderID).error(placeHolderID).into(imageView);
     }
 
-    // Create viewholder as static inner class
+    // Create view holder as static inner class
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Track view objects
-        ImageView ivPosterImage;  // Portrait mode
+        ImageView ivPosterImage;    // Portrait mode
         ImageView ivBackdropImage;  // Landscape mode
-        TextView tvTitle;  // Movie title
-        TextView tvOverview;  // Movie description
+        TextView tvTitle;           // Movie title
+        TextView tvOverview;        // Movie description
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,11 +128,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 // Pass backdrop image
                 String imageUrl = config.getImageUrl(config.getBackdropSize(), movie.getBackdropPath());
                 intent.putExtra("video_id", imageUrl);
+                intent.putExtra("name_movie", movie.getTitle());
 
                 // show the activity
                 context.startActivity(intent);
-
-
             }
         }
     }

@@ -12,7 +12,8 @@
         android:layout_height="241dp"
         android:layout_marginEnd="144dp"
         android:layout_marginRight="144dp"
-        android:layout_marginBottom="92dp"
+        android:layout_marginBottom="68dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
